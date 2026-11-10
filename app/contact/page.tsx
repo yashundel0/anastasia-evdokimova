@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import { ContactContent } from "@/components/contact-content"
 
 export const metadata: Metadata = {
@@ -6,11 +7,10 @@ export const metadata: Metadata = {
   description: "Inquiries, exhibitions and acquisition requests for Anastasia Evdokimova.",
 }
 
-export default async function ContactPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ artwork?: string }>
-}) {
-  const { artwork } = await searchParams
-  return <ContactContent key={artwork ?? ""} initialArtwork={artwork} />
+export default function ContactPage() {
+  return (
+    <Suspense fallback={<div>Loading contact form...</div>}>
+      <ContactContent />
+    </Suspense>
+  )
 }
