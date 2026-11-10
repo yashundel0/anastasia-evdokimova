@@ -1,3 +1,4 @@
+
 export type Locale = "en" | "ru"
 export type Localized = Record<Locale, string>
 export type ArtworkCategory = "painting" | "drawing"
@@ -19,7 +20,7 @@ export type Artwork = {
   description?: Localized
 }
 
-export const artworks: Artwork[] = [
+const artworkData: Artwork[] = [
   {
     slug: "regression",
     title: { en: "Regression", ru: "Регрессия" },
@@ -172,6 +173,20 @@ export const artworks: Artwork[] = [
   },
 ]
 
+const imageBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
+
+export const artworks: Artwork[] = artworkData.map((artwork) => ({
+  ...artwork,
+  image: {
+    ...artwork.image,
+    src: `${imageBasePath}${artwork.image.src}`,
+  },
+  views: artwork.views?.map((view) => ({
+    ...view,
+    src: `${imageBasePath}${view.src}`,
+  })),
+}))
+
 export const featuredSlugs = [
   "regression",
   "dream-pulse",
@@ -188,6 +203,7 @@ export function getArtwork(slug: string) {
 export function getNeighbours(slug: string) {
   const index = artworks.findIndex((a) => a.slug === slug)
   const total = artworks.length
+
   return {
     index,
     total,
